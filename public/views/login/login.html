@@ -1,0 +1,36 @@
+<div layout="row" layout-fill ng-cloak="" class="md-inline-form">
+    <section layout="column" flex layout-align="center center" class="login">
+        <md-card class="md-whiteframe-4dp">
+            <md-toolbar>
+                <div layout="column" layout-padding layout-align="center center">
+                    <div>
+                        <md-icon class="logo">gavel</md-icon>
+                    </div><br>
+                    <div class="md-headline md-padding">Login</div>
+                </div>
+            </md-toolbar>
+            <md-card-content>
+                <form name="frmlogin" ng-submit="submit(frmlogin)" ng-controller="loginCtrl">
+                    <md-input-container class="md-block">
+                        <label for="username">Username</label>
+                        <input type="username" name="username" ng-pattern="/^[a-z0-9]+$/i" ng-model="username" required />
+                    </md-input-container>
+                    <div ng-messages="frmlogin.username.$error" class="inputErrorsApp" ng-show="frmlogin.username.$dirty && !frmlogin.username.$valid" multiple="" md-auto-hide="true">
+                        <div ng-message="required">
+                            You need a name to play!
+                        </div>
+                        <div ng-message="pattern">
+                            Oops!! Only letters and numbers allowed.
+                        </div>
+                    </div>
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <div layout="row" layout-align="center center">
+                            <md-button class="md-raised md-accent" flex="50" id="submit" type="submit" value="submit">Login</md-button>
+                        </div>
+                    </md-input-container>
+                </form>
+            </md-card-content>
+        </md-card>
+    </section>
+</div>

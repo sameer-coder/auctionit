@@ -1,0 +1,4 @@
+1. change logging for debug and prod
+2. error checking
+3. remove all comments
+4. update ui

@@ -8,7 +8,15 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var db = require('./db.js');
+
 var app = express();
+
+//================== log4js config =====
+var log4js = require('log4js');
+log4js.loadAppender('file');
+log4js.addAppender(log4js.appenders.file('logs/debug.log'), 'debug');
+global.logger = log4js.getLogger();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -55,6 +63,8 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+
 
 
 module.exports = app;

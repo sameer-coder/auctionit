@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('auctionit:server');
 var http = require('http');
+var db = require('../db.js');
 
 /**
  * Get port from environment and store in Express.
@@ -25,9 +26,21 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+// Connect to MySQL on start
+db.connect(db.MODE_PRODUCTION, function(err) {
+  if (err) {
+    console.log('Unable to connect to MySQL.')
+    process.exit(1)
+  } else {
+      console.log('MySQL connection pool successfully created')
+      console.log('Now starting up node server')
+      server.listen(port);
+      server.on('error', onError);
+      server.on('listening', onListening);
+  }
+})
+
+
 
 /**
  * Normalize a port into a number, string, or false.
@@ -87,4 +100,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.log('Listening on : ' + bind);
 }
