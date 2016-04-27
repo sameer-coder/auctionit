@@ -3,13 +3,14 @@ angular.module('auctionApp').service('$userService', function() {
 
     var userDetails = {};
     userDetails = {
-        name: '',
+        id: 0,
+        username: '',
         coins: 0,
         breads: 0,
         carrots: 0,
-        diamonds: 0
+        diamonds: 0,
+        lastlogin:''
     };
-
     var setUserDetails = function(userDetail) {
         userDetails = userDetail;
         return userDetails;

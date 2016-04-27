@@ -13,36 +13,41 @@ angular.module('auctionApp.main', ['ngRoute'])
 
     $scope.userDetails = {};
     $scope.userDetails = {
-        name: '',
+        id: 0,
+        username: '',
         coins: 0,
         breads: 0,
         carrots: 0,
-        diamonds: 0
+        diamonds: 0,
+        lastlogin: ''
     };
 
-    $scope.username = "test";
+    $scope.inventory = ['breads', 'carrots', 'diamonds'];
 
-    if ($userService.username == undefined) {
+
+    console.log("$userService.username in main :" + $userService.getUsername());
+
+    if (sessionStorage.user == undefined) {
         $window.location.href = '/#/login';
         return;
     }
 
-    $scope.username = $userService.username;
+    $scope.username = sessionStorage.user;
+    $userService.setUsername(sessionStorage.user);
 
     $http({
         method: 'GET',
-        url: '/api/v1/getAllWidgets/' + $userService.username
+        url: '/api/v1/getAllWidgets/' + $userService.getUsername()
     }).then(function successCallback(response) {
 
-        // console.log($userService);
         //error checking
-        console.log("breads : " + response.data.userDetalis[0].breads);
-        console.log("c:" + $scope.userDetails);
+        // console.log("breads : " + response.data.userDetalis[0].breads);
+        // console.log($scope.userDetails);
         $userService.setUserDetails(response.data.userDetalis[0]);
 
         $scope.userDetails = $userService.getUserDetails();
-
-        $scope.userDetails.coins = $userService.getUserDetails().coins;
+        // console.log("post userDetails");
+        // console.log($scope.userDetails);
 
         $window.location.href = '/#/main';
         return;
@@ -51,7 +56,24 @@ angular.module('auctionApp.main', ['ngRoute'])
     });
 
 
+    $scope.logout = function() {
+        sessionStorage.removeItem('user');
+        $window.location.href = '/#/login';
+        return;
+    }
 
+
+    //socket.io code
+
+    var socket = io();
+
+    console.log(io);
+
+    io.on('connection', function(socket) {
+        socket.on('init_message', function(msg) {
+            console.log('message: ' + msg);
+        });
+    });
 
 
 });

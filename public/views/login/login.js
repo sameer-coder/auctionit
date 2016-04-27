@@ -17,16 +17,14 @@ angular.module('auctionApp.login', ['ngRoute', 'ngMaterial', 'ngMessages'])
             return;
         }
 
-        //set the username in service
-        $userService.username = $scope.username;
-
-        console.log("userService username : " + $userService.username);
+        // console.log("userService username : " + $userService.username);
 
         $http({
             method: 'GET',
             url: '/api/v1/login/' + $scope.username
         }).then(function successCallback(response) {
-            console.log(response);
+            $userService.setUsername($scope.username);
+            sessionStorage.setItem('user', $scope.username);
             $window.location.href = '/#/main';
             return;
         }, function errorCallback(response) {
@@ -34,8 +32,6 @@ angular.module('auctionApp.login', ['ngRoute', 'ngMaterial', 'ngMessages'])
         });
       };
 
-    // sessionStorage.user = JSON.stringify({user:"test"});
-    $scope.username = "";
 
 
 });

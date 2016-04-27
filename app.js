@@ -10,7 +10,15 @@ var users = require('./routes/users');
 
 var db = require('./db.js');
 
+var auction = require('./auction.js');
+var dbusers = require('./models/users.js');
+
 var app = express();
+
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+// var io = require('socket.io').listen(http);
+
 
 //================== log4js config =====
 var log4js = require('log4js');
@@ -62,6 +70,17 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+});
+
+
+io.on('connection', function(socket){
+  console.log('New user connected');
+
+  dbusers.getCurrentAuction(function(currentAuctionDetails){
+    console.log("server emiting : ");
+    console.log(currentAuctionDetails);
+    io.emit('init_message', JSON.Stringify(currentAuctionDetails));
+  })
 });
 
 

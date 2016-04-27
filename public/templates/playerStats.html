@@ -1,14 +1,21 @@
-
-  <md-content class="md-padding" layout-xs="column" layout="row">
-    <div flex-xs="" flex-gt-xs="50" layout="column">
-      <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch="">
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">Player Stats</span>
-            <span class="md-subhead">Player Name : {{username}}</span>
-            <span class="md-subhead">Coins       : {{userDetails[0].coins}}</span>
-          </md-card-title-text>
-        </md-card-title>
-      </md-card>
+<md-content class="md-padding">
+    <div flex-xs="" flex-gt-xs="30" layout="column">
+        <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch="">
+            <md-card-title>
+                <md-card-title-text layout="row">
+                    <h2 class="md-headline">Player Stats</h2>
+                    <span flex></span> <!-- The flex property in span will cover the space between the contents -->
+                    <md-button class="md-fab" aria-label="Logout" ng-style="{'size' : '50%'}" ng-click="logout()">
+                        <md-icon class="logo">power_settings_new</md-icon>
+                        <md-tooltip md-visible="false" md-direction="">Logout</md-tooltip>
+                    </md-button>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <span class="md-subhead">Player Name : {{username}}</span>
+                <p></p>
+                <span class="md-subhead">Coins       : {{userDetails.coins}}</span>
+            </md-card-content>
+        </md-card>
     </div>
 </md-content>

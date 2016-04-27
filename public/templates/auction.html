@@ -1,0 +1,39 @@
+
+<md-content class="md-padding" layout-xs="column" layout="row">
+<div flex-xs="" flex-gt-xs="90" layout="column">
+    <md-card >
+        <!-- <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out"> -->
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">Ongoing Auction</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <span class="md-subhead">Seller : {{username}}</span><p></p>
+            <span class="md-subhead">Item   : {{userDetails.coins}}</span><p></p>
+            <span class="md-subhead">Quantitiy   : {{userDetails.coins}}</span><p></p>
+            <span class="md-subhead">Time Left   : {{userDetails.coins}}</span><p></p>
+            <span class="md-subhead">Winning bid   : {{userDetails.coins}}</span><p></p>
+
+
+            <form name="frmauction" ng-submit="submit(frmauction)">
+                <md-input-container class="md-block">
+                    <label for="auctionQty">Enter Qty</label>
+                    <input type="auctionQty" name="auctionQty" ng-pattern="/^\d+$/" ng-model="auctionQty" required />
+                </md-input-container>
+                <div ng-messages="frmlogin.auctionQty.$error" class="inputErrorsApp" ng-show="frmlogin.auctionQty.$dirty && !frmlogin.auctionQty.$valid" multiple="" md-auto-hide="true">
+                    <div ng-message="pattern">
+                        Oops!! Only numbers allowed.
+                    </div>
+                </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <div layout="row" layout-align="center center">
+                        <md-button class="md-raised md-accent md-primary" flex="50" id="submit" type="submit" value="submit">Place Bid</md-button>
+                    </div>
+                </md-input-container>
+            </form>
+        </md-card-content>
+    </md-card>
+    </div>
+</md-content>
