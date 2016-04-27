@@ -16,8 +16,8 @@ var dbusers = require('./models/users.js');
 var app = express();
 
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
-// var io = require('socket.io').listen(http);
+// var io = require('socket.io')(http);
+var io = require('socket.io').listen(http);
 
 
 //================== log4js config =====

@@ -69,10 +69,14 @@ angular.module('auctionApp.main', ['ngRoute'])
 
     console.log(io);
 
-    io.on('connection', function(socket) {
-        socket.on('init_message', function(msg) {
-            console.log('message: ' + msg);
-        });
+    // io.on('connection', function(socket) {
+    //     socket.on('init_message', function(msg) {
+    //         console.log('message: ' + msg);
+    //     });
+    // });
+
+    socket.on('connect', function(){
+        console.log('message: ');
     });
 
 
