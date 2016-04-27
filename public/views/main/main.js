@@ -65,7 +65,7 @@ angular.module('auctionApp.main', ['ngRoute'])
 
     //socket.io code
 
-    var socket = io();
+    var socket = io.connect();
 
     console.log(io);
 
