@@ -34,7 +34,7 @@ router.route('/api/v1/getAllWidgets/:username').get(function(req, res) {
     var username = req.params.username;
 
     users.getAllByUsername(username, function(user_details) {
-        logger.debug(user_details);
+        // logger.debug(user_details);
         if (user_details.length == 0) {
             logger.debug("no such user exists");
             if (!res.headersSent) {
@@ -43,7 +43,7 @@ router.route('/api/v1/getAllWidgets/:username').get(function(req, res) {
         } else {
             if (!res.headersSent) {
                 res.json({ status: 'Loggedin', user: username, userDetalis: user_details });
-                logger.debug("getAllWidgets : " + user_details);
+                //logger.debug("getAllWidgets : " + user_details);
             }
         }
     })

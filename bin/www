@@ -5,6 +5,7 @@
  */
 
 var app = require('../app');
+var io = require('../io');
 var debug = require('debug')('auctionit:server');
 var http = require('http');
 var db = require('../db.js');
@@ -15,6 +16,8 @@ var db = require('../db.js');
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+
+
 
 /**
  * Create HTTP server.
@@ -33,8 +36,14 @@ db.connect(db.MODE_PRODUCTION, function(err) {
     process.exit(1)
   } else {
       console.log('MySQL connection pool successfully created')
-      console.log('Now starting up node server')
+      console.log('Now starting up node server');
+
+
+
+
+
       server.listen(port);
+      io.attach(server);
       server.on('error', onError);
       server.on('listening', onListening);
   }
@@ -102,3 +111,6 @@ function onListening() {
   debug('Listening on ' + bind);
   console.log('Listening on : ' + bind);
 }
+
+
+

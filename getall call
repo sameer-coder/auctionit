@@ -1,0 +1,30 @@
+getall call
+
+playerStats
+- playerName
+- coins
+- breads
+- carrots
+- diamonds
+- lastLogin
+
+inventory
+- itemList
+	- itemIcon
+	- itemName
+	- itemQty
+	- bStartAuction
+
+
+logout call
+
+
+
+start auction for item call
+Error in username
+
+
+https://www.nczonline.net/blog/2009/07/21/introduction-to-sessionstorage/
+Making things more interesting, sessionStorage is unique to a particular window or tab (what the specification refers to as a “top-level browsing context”). For instance, suppose you open Yahoo! Mail in two different tabs of your browser and the application saves some data in sessionStorage. The data from the first tab is not accessible to the second tab even though the protocol, hostname, and port are exactly the same.
+
+Store session in session storage

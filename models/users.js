@@ -5,7 +5,7 @@ exports.createUser = function(username, done) {
 
     db.get().query('INSERT INTO users (username, coins, breads, carrots , diamonds , lastlogin) VALUES(?,?,?,?,?,? )', values, function(err, result) {
         if (err) return done(err);
-        logger.debug(result.insertId);
+        //logger.debug(result.insertId);
         done(result.insertId);
     })
 }
@@ -23,12 +23,32 @@ exports.getAllByUsername = function(username, done) {
         if (err) return done(err)
         done(rows)
     })
+}
 
-    exports.getCurrentAuction = function(done) {
-        db.get().query('SELECT * FROM current_auction', function(err, rows) {
-            // console.log(rows);
-            if (err) return done(err)
-            done(rows)
-        })
-    }
+exports.getCurrentAuction = function(done) {
+    db.get().query('SELECT * FROM current_auction', function(err, rows) {
+        // console.log(rows);
+        if (err) return done(err)
+        done(rows)
+    })
+
+exports.setCurrentAuction = function(auctionDetails, done) {
+    db.get().query('INSERT INTO current_auction 
+`seller`,
+`bid`,
+`qty`,
+`item`,
+`start_time`,
+`end_time`)
+VALUES,
+auctionDetails.username>,
+<{bid: }>,
+<{qty: }>,
+<{item: }>,
+<{start_time: }>,
+<{end_time: }>)', function(err, rows) {
+        // console.log(rows);
+        if (err) return done(err)
+        done(rows)
+    })
 }

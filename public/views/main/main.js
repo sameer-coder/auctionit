@@ -9,7 +9,7 @@ angular.module('auctionApp.main', ['ngRoute'])
     });
 }])
 
-.controller('mainCtrl', function($scope, $http, $location, $window, $userService) {
+.controller('mainCtrl', function($scope, $http, $location, $window, $userService, $mdDialog) {
 
     $scope.userDetails = {};
     $scope.userDetails = {
@@ -21,6 +21,14 @@ angular.module('auctionApp.main', ['ngRoute'])
         diamonds: 0,
         lastlogin: ''
     };
+
+    $scope.auction = {};
+    $scope.auction_seller = "";
+    $scope.auction_item = "";
+    $scope.auction_quantity = 0;
+    $scope.auction_left = "";
+    $scope.auction_winning = "";
+    $scope.auction_starttime = "";
 
     $scope.inventory = ['breads', 'carrots', 'diamonds'];
 
@@ -63,21 +71,50 @@ angular.module('auctionApp.main', ['ngRoute'])
     }
 
 
+    // $scope.startAuction = function(ev, item) {
+    //     // Appending dialog to document.body to cover sidenav in docs app
+    //     var confirm = $mdDialog.prompt()
+    //     .clickOutsideToClose(true)
+    //         .title('How many ' + item + ' do you want to auction?')
+    //         .textContent('Please enter the quantity')
+    //         .placeholder('10')
+    //         .ariaLabel('10')
+    //         .targetEvent(ev)
+    //         .ok('Auction It!')
+    //         .cancel('No thanks');
+
+    //     $mdDialog.show(confirm).then(function(result) {
+
+    //         //error checking for number
+
+    //         console.log(item);
+
+    //         $scope.auction_quantity = result;
+    //         $scope.auction_seller = $scope.username;
+    //         $scope.auction_winning = $scope.username;
+
+    //         $scope.auction_starttime = (new Date()).toISOString();
+
+    //         console.log($scope.auction_starttime);
+
+    //         $mdDialog.hide(confirm);
+    //         confirm = undefined;
+
+    //     }, function(result) {
+    //     }).finally(function() {
+    //       });
+    // };
+
+
     //socket.io code
 
-    var socket = io.connect();
+    var socket = io.connect('http://localhost:3000');
+    socket.on('init_message', function(data) {
+        console.log('init_message' + data);
 
-    console.log(io);
-
-    // io.on('connection', function(socket) {
-    //     socket.on('init_message', function(msg) {
-    //         console.log('message: ' + msg);
-    //     });
-    // });
-
-    socket.on('connect', function(){
-        console.log('message: ');
+        socket.emit('currentAuctionDetails', {
+            my: 'data'
+        });
     });
-
 
 });

@@ -1,36 +1,30 @@
-        <md-content  class="md-padding" >
-        <div flex-xs="" flex-gt-xs="60" layout="column">
-      <md-list>
-        <md-subheader class="md-no-sticky">Inventory</md-subheader>
+<md-content class="md-padding" ng-style="{'width' : '60%'}">
+    <md-list class="inventory_list">
+        <md-subheader>Inventory</md-subheader>
 
-        <md-list-item  layout="row" layout-align="start end" class="md-3-line" ng-click="null">
-          <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}"> -->
-            <!-- <h3>Breads     </h3> -->
-          <div class="md-list-item-text" layout="column">
-          <h2 class="layout-padding layout-margin layout-fill">Breads     </h2>
-          <h3 class="md-padding">Quantity : {{userDetails.breads }}</h3>
-          </div>
-            <md-button class="md-raised md-warn" >Start Auction</md-button>
+        <md-list-item layout="row" layout-align="start end" class="md-3-line" ng-click="null">
+            <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}"> -->
+            <div class="md-list-item-text" layout="column">
+                <h2 class="layout-padding layout-margin layout-fill">Breads     </h2>
+                <h3 class="md-padding">Quantity : {{userDetails.breads }}</h3>
+            </div>
+            <md-button class="md-raised md-warn" ng-click="startAuction($event, 'breads')">Start Auction</md-button>
         </md-list-item>
-
-
         <md-list-item class="md-3-line" ng-click="null">
-          <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}"> -->
-          <div class="md-list-item-text" layout="column">
-          <h2 class="layout-padding layout-margin layout-fill ">Carrots     </h2>
-            <h3 class="md-padding">Quantity : {{userDetails.carrots }}</h3>
-          </div>
-          <md-button class="md-raised md-warn" >Start Auction</md-button>
+            <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}"> -->
+            <div class="md-list-item-text" layout="column">
+                <h2 class="layout-padding layout-margin layout-fill ">Carrots     </h2>
+                <h3 class="md-padding">Quantity : {{userDetails.carrots }}</h3>
+            </div>
+            <md-button class="md-raised md-warn" ng-click="startAuction($event, 'carrots')">Start Auction</md-button>
         </md-list-item>
-
-                <md-list-item class="md-3-line" ng-click="null">
-          <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}"> -->
-          <div class="md-list-item-text" layout="column">
-          <h2 class="layout-padding layout-margin layout-fill ">Diamonds     </h2>
-          <h3 class="md-padding">Quantity : {{ userDetails.diamonds }}</h3>
-          </div>
-          <md-button class="md-raised md-warn" >Start Auction</md-button>
+        <md-list-item class="md-3-line" ng-click="null">
+            <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}"> -->
+            <div class="md-list-item-text" layout="column">
+                <h2 class="layout-padding layout-margin layout-fill ">Diamonds     </h2>
+                <h3 class="md-padding">Quantity : {{ userDetails.diamonds }}</h3>
+            </div>
+            <md-button class="md-raised md-warn" ng-click="startAuction($event, 'diamonds')">Start Auction</md-button>
         </md-list-item>
-
-        </md-list>
-        </div></md-content>
+    </md-list>
+</md-content>
