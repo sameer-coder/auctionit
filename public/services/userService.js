@@ -9,7 +9,7 @@ angular.module('auctionApp').service('$userService', function() {
         breads: 0,
         carrots: 0,
         diamonds: 0,
-        lastlogin:''
+        lastlogin: ''
     };
     var setUserDetails = function(userDetail) {
         userDetails = userDetail;
@@ -28,6 +28,7 @@ angular.module('auctionApp').service('$userService', function() {
     var getUsername = function() {
         return username;
     };
+
 
     return {
         getUsername: getUsername,

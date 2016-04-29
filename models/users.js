@@ -26,39 +26,63 @@ exports.getAllByUsername = function(username, done) {
 }
 
 exports.getCurrentAuction = function(done) {
-    console.log("got request")
     db.get().query('SELECT * FROM current_auction', function(err, rows) {
-        // console.log(rows);
         if (err) return done(err)
         done(rows)
     })
 }
-exports.getCurrentAuctionDateTime = function(done) {
-    db.get().query('SELECT end_time FROM current_auction', function(err, rows) {
-        if (err) return done(err)
-        done(rows)
-    })
-}
+
+
 exports.updateCurrentAuction = function(done) {
 
     db.get().query('SELECT end_time FROM current_auction', function(err, rows) {
         if (err) {
             return done(err)
         } else {
-            console.log("auction time on db : " + rows);
+            if (rows[0] == undefined) //no auction ongoing
+            {
+                done("no_ongoing_auction");
+            } else {
+                var d = new Date(Date.parse(String(rows[0].end_time)));
+                var time_now = new Date();
 
-            // db.get().query('TRUNCATE current_auction', function(err, rows) {
-            //     if (err) return done(err)
-            //     done("success")
-            // })
+                console.log(d + " == " + time_now)
+                // console.log(d)
+                // console.log(time_now)
+
+                if (time_now - d > 0) {
+                    console.log("truncating table")
+                    db.get().query('TRUNCATE current_auction', function(err, rows) {
+                        if (err) return done(err)
+                        done("success")
+                    })
+                }
+            }
         }
     })
 }
 
 exports.setCurrentAuction = function(auctionDetails, done) {
-    db.get().query("INSERT INTO current_auction   `seller`,  `bid`,  `qty`,   `item`,  `start_time`, `end_time` VALUES(auctionDetails.username,   auctionDetails.bidprice,     auctionDetails.qty,   auctionDetails.item,  auctionDetails.start_time, auctionDetails.end_time)", function(err, rows) {
-        // console.log(rows);
-        if (err) return done(err)
-        done(rows)
+
+
+    db.get().query('SELECT end_time FROM current_auction', function(err, rows) {
+        if (err) {
+            return done(err)
+        } else {
+            console.log("rows.length = " + rows.length)
+            if (rows.length == 0) {
+                console.log("INSERT INTO current_auction (seller,  bid,  qty,   item,  start_time, end_time) VALUES('" + auctionDetails.username + "',   " + auctionDetails.bidprice + ",     " + auctionDetails.qty + ",   '" + auctionDetails.item + "',  '" + auctionDetails.start_time + "', '" + auctionDetails.end_time + "')");
+                db.get().query("INSERT INTO current_auction (seller,  bid,  qty,   item,  start_time, end_time) VALUES('" + auctionDetails.username + "',   " + auctionDetails.bidprice + ",     " + auctionDetails.qty + ",   '" + auctionDetails.item + "',  '" + auctionDetails.start_time + "', '" + auctionDetails.end_time + "')", function(err, rows) {
+                    console.log(rows);
+                    if (err) {
+                        logger.debug(err);
+                        return done(err)
+                    }
+                    done("success")
+                })
+            } else {
+                return done("auction_in_progress");
+            }
+        }
     })
 }

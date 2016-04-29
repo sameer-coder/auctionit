@@ -34,7 +34,9 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -83,20 +85,29 @@ io.on('connection', function(socket) {
     socket.on('SendcurrentAuctionDetails', function() {
         console.log("Received request for currentAuctionDetails");
         dbusers.getCurrentAuction(function(res) {
-            console.log(res);
             socket.emit('currentAuctionDetails', res);
         })
     });
+
+    setInterval(function() {
+        dbusers.getCurrentAuction(function(res) {
+            socket.emit('currentAuctionDetails', res);
+        })
+    }, 500);
+
 });
+
+
 
 io.on('error', function() {
     console.log("errr");
 });
 
 
-//update the current auction
-setTimeout(function () {
-  
-}, 1000)
+setInterval(function() {
+    dbusers.updateCurrentAuction(function(status) {
+
+    })
+}, 500);
 
 module.exports = app;

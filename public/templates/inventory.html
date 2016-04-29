@@ -8,7 +8,7 @@
                 <h2 class="layout-padding layout-margin layout-fill">Breads     </h2>
                 <h3 class="md-padding">Quantity : {{userDetails.breads }}</h3>
             </div>
-            <md-button class="md-raised md-warn" ng-click="startAuction('breads')">Start Auction</md-button>
+            <md-button class="md-raised md-warn" ng-click="startAuction(evt, 'breads')">Start Auction</md-button>
         </md-list-item>
         <md-list-item class="md-3-line" ng-click="null">
             <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}"> -->
@@ -16,7 +16,7 @@
                 <h2 class="layout-padding layout-margin layout-fill ">Carrots     </h2>
                 <h3 class="md-padding">Quantity : {{userDetails.carrots }}</h3>
             </div>
-            <md-button class="md-raised md-warn" ng-click="startAuction('carrots')">Start Auction</md-button>
+            <md-button class="md-raised md-warn" ng-click="startAuction(evt ,'carrots')">Start Auction</md-button>
         </md-list-item>
         <md-list-item class="md-3-line" ng-click="null">
             <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}"> -->
@@ -24,7 +24,7 @@
                 <h2 class="layout-padding layout-margin layout-fill ">Diamonds     </h2>
                 <h3 class="md-padding">Quantity : {{ userDetails.diamonds }}</h3>
             </div>
-            <md-button class="md-raised md-warn" ng-click="startAuction('diamonds')">Start Auction</md-button>
+            <md-button class="md-raised md-warn" ng-click="startAuction(evt ,'diamonds')">Start Auction</md-button>
         </md-list-item>
     </md-list>
 </md-content>

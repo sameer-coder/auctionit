@@ -2,14 +2,18 @@
 
 angular.module('auctionApp.main', ['ngRoute'])
 
-.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/main', {
-        templateUrl: 'views/main/main.html',
-        controller: 'mainCtrl'
-    });
-}])
+.config(['$routeProvider',
+    function($routeProvider) {
+        $routeProvider.when('/main', {
+            templateUrl: 'views/main/main.html',
+            controller: 'mainCtrl'
+        });
+    }
+])
 
-.controller('mainCtrl', function($scope, $http, $location, $window, $userService, $mdDialog) {
+.controller('mainCtrl', function($scope, $http, $location, $window, $userService, $mdDialog, $mdToast) {
+
+    var socket = io.connect('http://localhost:3000');
 
     $scope.userDetails = {};
     $scope.userDetails = {
@@ -22,7 +26,8 @@ angular.module('auctionApp.main', ['ngRoute'])
         lastlogin: ''
     };
 
-    $scope.auction = {};
+    $scope.auction_status = "No Auction"
+
     $scope.auction_seller = "";
     $scope.auction_item = "";
     $scope.auction_quantity = 0;
@@ -37,8 +42,13 @@ angular.module('auctionApp.main', ['ngRoute'])
 
     $scope.inventory = ['breads', 'carrots', 'diamonds'];
 
-
-    console.log("$userService.username in main :" + $userService.getUsername());
+    $scope.$watch(function() {
+        return window.seller
+    }, function(newVal, oldVal) {
+        if (typeof newVal !== 'undefined') {
+            $scope.auction_seller = window.seller;
+        }
+    });
 
     if (sessionStorage.user == undefined) {
         $window.location.href = '/#/login';
@@ -75,37 +85,53 @@ angular.module('auctionApp.main', ['ngRoute'])
         return;
     }
 
-    $scope.startAuction = function(item) {
-        $scope.auction_item;
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope, // use parent scope in template
-            preserveScope: true,
-            templateUrl: '/templates/auctionDialog.html',
-            // onComplete: afterShowAnimation,
-            locals: { item: item,
-            Cancel : $scope.Cancel,
-            auctionStarted : $scope.auctionStarted,
-            auction_item : $scope.auction_item,
-            auction_bidprice : $scope.auction_bidprice,
-            auction_quantity : $scope.auction_quantity
-             }
-        });
-    }
 
-
-
-    $scope.auctionStarted = function() {
+    $scope.auctionStarted = function(auction_item, auction_quantity, auction_bidprice) {
         //clicked the start auction button on dialog
         console.log("sending auction details")
-        console.log($scope.auction[0])
-        
-                $http.post("/api/v1/updateCurrentAuction/", $scope.auction[0]).then(function successCallback(data,status) {
-            console.log(data)
-            return;
+
+        $mdDialog.hide();
+
+        var t = new Date();
+        var postAuction = {}
+        postAuction.username = $scope.username;
+        postAuction.bidprice = auction_bidprice;
+        postAuction.qty = auction_quantity;
+        postAuction.item = auction_item;
+        postAuction.start_time = t;
+        t.setSeconds(t.getSeconds() + 90)
+        postAuction.end_time = t;
+
+
+        console.log("end time : " + postAuction.end_time);
+
+
+        $http.post("/api/v1/updateCurrentAuction/", postAuction).then(function successCallback(data, status) {
+            console.log(data.data.errorMessage)
+            if (data.data.errorMessage == "auction_in_progress") {
+                alert("Auction already in progress. Please try later")
+                return;
+            } else {
+                alert("Auction started")
+
+                $scope.auction_seller = postAuction.username;
+                $scope.auction_item = postAuction.bidprice;
+                $scope.auction_quantity = postAuction.qty;
+                $scope.auction_winning = postAuction.item;
+                $scope.auction_starttime = postAuction.start_time;
+                $scope.auction_bidprice = postAuction.end_time;
+
+                socket.emit('SendcurrentAuctionDetails', {
+                    my: 'data'
+                });
+
+
+            }
         }, function errorCallback(response) {
-            console.log(status);
+            console.log(response);
         });
+
+
     };
 
 
@@ -113,45 +139,35 @@ angular.module('auctionApp.main', ['ngRoute'])
         $mdDialog.hide();
     }
 
-
-    // $scope.startAuction = function(ev, item) {
-    //     // Appending dialog to document.body to cover sidenav in docs app
-    //     var confirm = $mdDialog.prompt()
-    //     .clickOutsideToClose(true)
-    //         .title('How many ' + item + ' do you want to auction?')
-    //         .textContent('Please enter the quantity')
-    //         .placeholder('10')
-    //         .ariaLabel('10')
-    //         .targetEvent(ev)
-    //         .ok('Auction It!')
-    //         .cancel('No thanks');
-
-    //     $mdDialog.show(confirm).then(function(result) {
-
-    //         //error checking for number
-
-    //         console.log(item);
-
-    //         $scope.auction_quantity = result;
-    //         $scope.auction_seller = $scope.username;
-    //         $scope.auction_winning = $scope.username;
-
-    //         $scope.auction_starttime = (new Date()).toISOString();
-
-    //         console.log($scope.auction_starttime);
-
-    //         $mdDialog.hide(confirm);
-    //         confirm = undefined;
-
-    //     }, function(result) {
-    //     }).finally(function() {
-    //       });
-    // };
-
+    $scope.startAuction = function(evt, item) {
+        $scope.auction_item = item;
+        $mdDialog.show({
+            locals: {
+                Cancel: $scope.Cancel,
+                auctionStarted: $scope.auctionStarted,
+                auction_item: item,
+                auction_bidprice: $scope.auction_bidprice,
+                auction_quantity: $scope.auction_quantity
+            },
+            clickOutsideToClose: true,
+            templateUrl: '/templates/auctionDialog.html',
+            // onComplete: afterShowAnimation,
+            controller: ['$scope', 'auctionStarted', 'Cancel', 'auction_bidprice', 'auction_quantity', 'auction_item',
+                function($scope, auctionStarted, Cancel, auction_bidprice, auction_quantity, auction_item) {
+                    console.log("in controller")
+                    $scope.auctionStarted = auctionStarted;
+                    $scope.Cancel = Cancel;
+                    $scope.auction_bidprice = auction_bidprice;
+                    $scope.auction_quantity = auction_quantity;
+                    $scope.auction_item = auction_item;
+                }
+            ]
+        });
+    }
 
     //socket.io code
 
-    var socket = io.connect('http://localhost:3000');
+
     socket.on('init_message', function(data) {
         console.log('init_message' + data);
 
@@ -163,12 +179,33 @@ angular.module('auctionApp.main', ['ngRoute'])
 
     socket.on('currentAuctionDetails', function(data) {
         console.log('currentAuctionDetails');
-        console.log(data);
+        console.log(data[0]);
+        if (data[0] == undefined) {
+            $scope.auction_status = "No Auction";
+            $scope.auction_seller = ""
+            $scope.auction_quantity = 0
+            $scope.auction_left = ""
 
-        if (data == "no_auction") {
-            $scope.isAuctionOn = fasle;
+            $scope.auction_item = ""
+            $scope.auction_bidprice = ""
+            $scope.$apply();
+        }
+
+        if (data == "no_auction" || data.length < 1) {
+            $scope.isAuctionOn = false;
         } else {
-            $scope.auction = data;
+            if (data[0].seller != undefined) {
+                $scope.auction_status = "Ongoing Auction";
+                console.log($scope.auction_seller)
+                console.log(data[0].seller)
+                $scope.auction_seller = data[0].seller;
+                $scope.auction_quantity = data[0].qty;
+                $scope.auction_left = String(((new Date() - new Date(Date.parse(String(data[0].end_time)))) / 1000)).replace('-', '') + "seconds";
+
+                $scope.auction_item = data[0].item;
+                $scope.auction_bidprice = data[0].bid;
+                $scope.$apply();
+            }
         }
     });
 
