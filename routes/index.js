@@ -49,6 +49,27 @@ router.route('/api/v1/getAllWidgets/:username').get(function(req, res) {
     })
 });
 
+router.route('/api/v1/updateCurrentAuction').post(function(req, res) {
+    var auction = req.body;
+
+    console.log("auction in rest api: ")
+    console.log(+ auction)
+
+    users.setCurrentAuction(auction, function(status) {
+
+        if (status.length == 0) {
+            logger.debug("Error in updating "+ status);
+            if (!res.headersSent) {
+                res.json({ status: 'Error', errorMessage: "Error in updating current_auction" });
+            }
+        } else {
+            if (!res.headersSent) {
+                res.json({ status: 'success'});
+            }
+        }
+    })
+});
+
 
 
 module.exports = router;

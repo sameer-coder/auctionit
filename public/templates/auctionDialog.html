@@ -1,0 +1,20 @@
+<md-toolbar class="md-padding">
+    Auction Item</md-toolbar>
+<md-content layout-padding>
+    <div flex="" layout="column">
+        <!-- <md-subheader>Selected item is {{vm.username}}</md-subheader> -->
+        <!--You can use md-no-sticky class-->
+        <md-input-container>
+            <label>Enter Quantity</label>
+            <input type="text" ng-model="auction_quantity" ng-pattern="/^[0-9]{1,2}$/" required ng-model="auction_quantity">
+        </md-input-container>
+        <md-input-container>
+            <label>Enter minimum bid value</label>
+            <input type="text" ng-model="auction_bidprice" ng-pattern="/^[0-9]{1,2}$/" required ng-model="auction_bidprice">
+        </md-input-container>
+        <div layout="row">
+            <md-button class="md-raised md-warn" aria-label="description" md-no-ink="true|false" md-ripple-size="auto" ng-click="auctionStarted()">Start Auction Now</md-button>
+            <md-button class="md-raised md-warn" aria-label="description" md-no-ink="true|false" md-ripple-size="auto" ng-click="Cancel()">Cancel</md-button>
+        </div>
+    </div>
+</md-content>

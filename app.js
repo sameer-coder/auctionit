@@ -74,12 +74,14 @@ app.use(function(err, req, res, next) {
 });
 
 io.on('connection', function(socket) {
+    //sends the current auction details
     dbusers.getCurrentAuction(function(res) {
         console.log(res);
         socket.emit('init_message', res);
     })
 
-    socket.on('currentAuctionDetails', function() {
+    socket.on('SendcurrentAuctionDetails', function() {
+        console.log("Received request for currentAuctionDetails");
         dbusers.getCurrentAuction(function(res) {
             console.log(res);
             socket.emit('currentAuctionDetails', res);
@@ -90,5 +92,11 @@ io.on('connection', function(socket) {
 io.on('error', function() {
     console.log("errr");
 });
+
+
+//update the current auction
+setTimeout(function () {
+  
+}, 1000)
 
 module.exports = app;

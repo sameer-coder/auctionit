@@ -29,6 +29,11 @@ angular.module('auctionApp.main', ['ngRoute'])
     $scope.auction_left = "";
     $scope.auction_winning = "";
     $scope.auction_starttime = "";
+    $scope.auction_bidprice = "";
+
+    $scope.isAuctionOn = function() {
+
+    }
 
     $scope.inventory = ['breads', 'carrots', 'diamonds'];
 
@@ -68,6 +73,44 @@ angular.module('auctionApp.main', ['ngRoute'])
         sessionStorage.removeItem('user');
         $window.location.href = '/#/login';
         return;
+    }
+
+    $scope.startAuction = function(item) {
+        $scope.auction_item;
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope, // use parent scope in template
+            preserveScope: true,
+            templateUrl: '/templates/auctionDialog.html',
+            // onComplete: afterShowAnimation,
+            locals: { item: item,
+            Cancel : $scope.Cancel,
+            auctionStarted : $scope.auctionStarted,
+            auction_item : $scope.auction_item,
+            auction_bidprice : $scope.auction_bidprice,
+            auction_quantity : $scope.auction_quantity
+             }
+        });
+    }
+
+
+
+    $scope.auctionStarted = function() {
+        //clicked the start auction button on dialog
+        console.log("sending auction details")
+        console.log($scope.auction[0])
+        
+                $http.post("/api/v1/updateCurrentAuction/", $scope.auction[0]).then(function successCallback(data,status) {
+            console.log(data)
+            return;
+        }, function errorCallback(response) {
+            console.log(status);
+        });
+    };
+
+
+    $scope.Cancel = function() {
+        $mdDialog.hide();
     }
 
 
@@ -112,9 +155,21 @@ angular.module('auctionApp.main', ['ngRoute'])
     socket.on('init_message', function(data) {
         console.log('init_message' + data);
 
-        socket.emit('currentAuctionDetails', {
+        console.log("Requesting current_auction")
+        socket.emit('SendcurrentAuctionDetails', {
             my: 'data'
         });
+    });
+
+    socket.on('currentAuctionDetails', function(data) {
+        console.log('currentAuctionDetails');
+        console.log(data);
+
+        if (data == "no_auction") {
+            $scope.isAuctionOn = fasle;
+        } else {
+            $scope.auction = data;
+        }
     });
 
 });
